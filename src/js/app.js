@@ -68,6 +68,7 @@ web3 = new Web3(App.web3Provider);
   bindEvents: function() {
     $(document).on('click', '.btn-adopt', App.handleAdopt);
   },
+ 
 
   markAdopted: function(adopters, account) {
     var adoptionInstance;
@@ -79,13 +80,21 @@ web3 = new Web3(App.web3Provider);
     }).then(function(adopters) {
       for (i = 0; i < adopters.length; i++) {
         if (adopters[i] !== '0x0000000000000000000000000000000000000000') {
-          $('.panel-pet').eq(i).find('button').text('Success').attr('disabled', true);
+          // show the info for owner (for 9. find pet owner address feature)
+          (function (petId) {
+            $('.panel-pet').eq(i).find('button').text('Success').attr('disabled', true);
+            adoptionInstance.getOwnerOfPet(petId).then(function (owner) {
+                $('.panel-pet').eq(petId).find('#petOwnerInfo').text(owner);
+            });          
+          })(i);         
         }
       }
     }).catch(function(err) {
       console.log(err.message);
     });
   },
+
+  
 
   handleAdopt: function(event) {
     event.preventDefault();
@@ -113,6 +122,8 @@ web3 = new Web3(App.web3Provider);
       });
     });
   }
+
+  
 
 };
 
