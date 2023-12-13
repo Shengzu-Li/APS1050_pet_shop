@@ -1,3 +1,4 @@
+let ownersArray = [];
 App = {
   web3Provider: null,
   contracts: {},
@@ -69,7 +70,6 @@ web3 = new Web3(App.web3Provider);
     $(document).on('click', '.btn-adopt', App.handleAdopt);
   },
  
-
   markAdopted: function(adopters, account) {
     var adoptionInstance;
 
@@ -84,11 +84,21 @@ web3 = new Web3(App.web3Provider);
           (function (petId) {
             $('.panel-pet').eq(i).find('button').text('Success').attr('disabled', true);
             adoptionInstance.getOwnerOfPet(petId).then(function (owner) {
-                $('.panel-pet').eq(petId).find('#petOwnerInfo').text(owner);
-            });          
-          })(i);         
+              ownersArray.push(owner);
+              $('.panel-pet').eq(petId).find('#petOwnerInfo').text(owner);
+              //12. a way of keeping track of how many custumers have been served...
+              //change the totalCustumers
+              $('#totalCustumers').text([...new Set(ownersArray)].length);
+            });
+
+          })(i);
+
         }
       }
+      //12...and how many Pets Adopted
+      adoptionInstance.getTotalPetsAdopted().then(function(totalPetsAdopted) {
+        $('#totalPetsAdopted').text(totalPetsAdopted);
+      });
     }).catch(function(err) {
       console.log(err.message);
     });

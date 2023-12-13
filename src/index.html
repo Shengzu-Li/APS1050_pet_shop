@@ -31,6 +31,14 @@
 
         <!-- PETS LOAD HERE -->
       </div>
+      <!-- 12. a way of keeping track of how many custumers have been served and how many pets adopted -->
+
+      <div class="row">
+        <div class="col-xs-12 col-sm-8 col-sm-push-2">
+          <p>We already served <span id="totalCustumers">0</span> custumers</p>
+          <p>We have <span id="totalPetsAdopted">0</span> pets adopted</p>
+        </div>
+      </div>
     </div>
 
     <div id="petTemplate" style="display: none;">
@@ -45,6 +53,7 @@
             <strong>Breed</strong>: <span class="pet-breed">Golden Retriever</span><br/>
             <strong>Age</strong>: <span class="pet-age">3</span><br/>
             <strong>Location</strong>: <span class="pet-location">Warren, MI</span><br/>
+            <!-- 9. a way of keeping track of which pet belongs to which owner  -->
             <strong>Owner</strong>: <span id="petOwnerInfo">Unknown</span><br/>
             <button class="btn btn-default btn-adopt" type="button" data-id="0">Adopt</button>
           </div>
