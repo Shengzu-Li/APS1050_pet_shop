@@ -86,9 +86,9 @@ web3 = new Web3(App.web3Provider);
             adoptionInstance.getOwnerOfPet(petId).then(function (owner) {
               ownersArray.push(owner);
               $('.panel-pet').eq(petId).find('#petOwnerInfo').text(owner);
-              //12. a way of keeping track of how many custumers have been served...
-              //change the totalCustumers
-              $('#totalCustumers').text([...new Set(ownersArray)].length);
+              //12. a way of keeping track of how many customers have been served...
+              //change the totalCustomers
+              $('#totalCustomers').text([...new Set(ownersArray)].length);
             });
 
           })(i);
