@@ -21,6 +21,14 @@ function testUserCanAdoptPet() public {
   Assert.equal(returnedId, expectedPetId, "Adoption of the expected pet should match what is returned.");
 }
 
+// Testing the register() function
+function testUserCanRegisterPet() public {
+  uint pet_id = 20;
+  uint returnedId = adoption.register("Dabao", "Tugou", 4, "Toronto, ON", pet_id);
+
+  Assert.equal(returnedId, expectedPetId, "Register of the expected pet should match what is returned.");
+}
+
 // Testing retrieval of a single pet's owner
 function testGetAdopterAddressByPetId() public {
   address adopter = adoption.adopters(expectedPetId);
