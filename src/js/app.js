@@ -68,6 +68,7 @@ web3 = new Web3(App.web3Provider);
 
   bindEvents: function() {
     $(document).on('click', '.btn-adopt', App.handleAdopt);
+    $(document).on('click', '.btn-register', App.handleRegister);
   },
  
   markAdopted: function(adopters, account) {
@@ -131,6 +132,75 @@ web3 = new Web3(App.web3Provider);
         console.log(err.message);
       });
     });
+  },
+
+  handleRegister: function(event) {
+    event.preventDefault();
+    
+    const fileInput = $('<input type="file" id="imageInput" style="display: none;">');
+    $('.registerForm').append(fileInput);
+    fileInput.click();
+    
+    fileInput.on('change', function(event) {
+      const selectedImg = event.target.files[0];
+
+      if (!selectedImg.type.startsWith('image/')) {
+        alert("File uploaded is not an image! Please try again!")
+      }else{
+        const reader = new FileReader();
+
+        reader.onload = (e) => {
+          var imgContent = e.target.result;
+
+          $.getJSON('../pets.json', function(data) {
+
+            var name = prompt("Waht's the pet's name?", "Dabao");
+            var breed = prompt("What's the pet's breed?", "Tugou")
+            var age = parseInt(prompt("What's the pet's age?", "3"))
+            var location = prompt("What's the pet's location?", "Toronto, Ontario")
+            var lastId = data[data.length-1].id + 1;
+
+            var adoptionInstance;
+
+            web3.eth.getAccounts(function(error, accounts) {
+              if (error) {
+                console.log(error);
+              }
+    
+              var account = accounts[0];
+    
+              App.contracts.Adoption.deployed().then(function(instance) {
+                adoptionInstance = instance;
+
+                return adoptionInstance.register(name, breed, age, location, lastId, {from: account});
+              }).then(function(result) {
+                var petsRow = $('#petsRow');
+                var petTemplate = $('#petTemplate');
+
+                petTemplate.find('.panel-title').text(name);
+                petTemplate.find('img').attr('src', imgContent);
+                petTemplate.find('.pet-breed').text(breed);
+                petTemplate.find('.pet-age').text(age);
+                petTemplate.find('.pet-location').text(location);
+                petTemplate.find('.btn-adopt').attr('data-id', lastId);
+
+                petsRow.append(petTemplate.html());
+                
+                alert("New pet add successfully!")
+              }).catch(function(err) {
+                console.log(err.message);
+              });
+            });
+          });
+
+        };
+
+        reader.readAsDataURL(selectedImg);
+      }
+
+      $(this).remove();
+    });
+
   }
 
   
