@@ -6,7 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
     <title>Pete's Pet Shop</title>
-
     <!-- Bootstrap -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
 
@@ -17,6 +16,7 @@
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
   </head>
+
   <body>
     <div class="container">
       <div class="registerForm">
@@ -32,7 +32,17 @@
       </div>
 
       <div id="petsRow" class="row">
+
         <!-- PETS LOAD HERE -->
+        
+      </div>
+      <!-- 12. a way of keeping track of how many customers have been served and how many pets adopted -->
+
+      <div class="bottom">
+        <div class="customers_adopted">
+          <p>We already served <span id="totalCustomers">0</span> customers, and <span id="totalPetsAdopted">0</span> pets adopted</p>
+          
+        </div>
       </div>
     </div>
 
@@ -47,7 +57,14 @@
             <br/><br/>
             <strong>Breed</strong>: <span class="pet-breed">Golden Retriever</span><br/>
             <strong>Age</strong>: <span class="pet-age">3</span><br/>
-            <strong>Location</strong>: <span class="pet-location">Warren, MI</span><br/><br/>
+            <strong>Location</strong>: <span class="pet-location">Warren, MI</span><br/>
+            <!-- 9. a way of keeping track of which pet belongs to which owner  -->
+            <div class="hidden-before">
+              <strong>Owner Address</strong>
+                <div class="hidden-after">
+                  <span id="petOwnerInfo">Unknown</span><br/>
+                </div>
+            </div>
             <button class="btn btn-default btn-adopt" type="button" data-id="0">Adopt</button>
           </div>
         </div>
@@ -61,5 +78,6 @@
     <script src="js/web3.min.js"></script>
     <script src="js/truffle-contract.js"></script>
     <script src="js/app.js"></script>
+
   </body>
 </html>

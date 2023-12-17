@@ -1,3 +1,4 @@
+let ownersArray = [];
 App = {
   web3Provider: null,
   contracts: {},
@@ -69,7 +70,7 @@ web3 = new Web3(App.web3Provider);
     $(document).on('click', '.btn-adopt', App.handleAdopt);
     $(document).on('click', '.btn-register', App.handleRegister);
   },
-
+ 
   markAdopted: function(adopters, account) {
     var adoptionInstance;
 
@@ -80,13 +81,31 @@ web3 = new Web3(App.web3Provider);
     }).then(function(adopters) {
       for (i = 0; i < adopters.length; i++) {
         if (adopters[i] !== '0x0000000000000000000000000000000000000000') {
-          $('.panel-pet').eq(i).find('button').text('Success').attr('disabled', true);
+          // show the info for owner (for 9. find pet owner address feature)
+          (function (petId) {
+            $('.panel-pet').eq(i).find('button').text('Success').attr('disabled', true);
+            adoptionInstance.getOwnerOfPet(petId).then(function (owner) {
+              ownersArray.push(owner);
+              $('.panel-pet').eq(petId).find('#petOwnerInfo').text(owner);
+              //12. a way of keeping track of how many customers have been served...
+              //change the totalCustomers
+              $('#totalCustomers').text([...new Set(ownersArray)].length);
+            });
+
+          })(i);
+
         }
       }
+      //12...and how many Pets Adopted
+      adoptionInstance.getTotalPetsAdopted().then(function(totalPetsAdopted) {
+        $('#totalPetsAdopted').text(totalPetsAdopted);
+      });
     }).catch(function(err) {
       console.log(err.message);
     });
   },
+
+  
 
   handleAdopt: function(event) {
     event.preventDefault();
@@ -183,6 +202,8 @@ web3 = new Web3(App.web3Provider);
     });
 
   }
+
+  
 
 };
 
