@@ -4,6 +4,7 @@ pragma solidity ^0.5.0;
 //1. a way of adding/registering pets (and their photos**), for a fee
 //9. a way of keeping track of which pet belongs to which owner 
 //12. a way of keeping track of how many custumers have been served and how many pets adopted
+//13. a way of returning the pet, for a fee
 
 contract Adoption {
 address[16] public adopters;
@@ -22,6 +23,9 @@ mapping(uint => Pet) public Pets;
 //owner feature 
 //find address
 mapping(uint => address) public petToOwner;
+//array for storing pet breeds with cooresponding counts.
+mapping(bytes32 => uint) public breedCounts;
+bytes32[] public breeds;
 
 //1. a way of registering pets
 // Registering a pet
@@ -36,6 +40,7 @@ function returnPet(uint pet_id) public returns (uint) {
   delete Pets[pet_id];
   adopters[pet_id] = address(0);
   countPetAdopted--;
+  breedCounts[Pets[pet_id].pet_breed]--;
   return pet_id;
 }
 
@@ -74,6 +79,13 @@ constructor() public {
 
     countPetAdopted++;
 
+    if (breedCounts[Pets[petId].pet_breed] == uint(0)) {
+      breedCounts[Pets[petId].pet_breed]++;
+      breeds.push(Pets[petId].pet_breed);
+    }else{
+      breedCounts[Pets[petId].pet_breed]++;
+    }
+
     return petId;
   }
 
@@ -93,6 +105,18 @@ constructor() public {
   //two function getTotalCustumers and getTotalPetsAdopted
   function getTotalPetsAdopted() public view returns (uint) {
     return countPetAdopted;
+  }
+
+  function getMostAdoptedBreed() public view returns (bytes32) {
+    uint n = breeds.length;
+    bytes32 preferedBreed = breeds[0];
+
+    for (uint i = n-1; i >0; i--) {
+      if (breedCounts[breeds[i]] > breedCounts[preferedBreed]) {
+        preferedBreed = breeds[i];
+      }
+    }
+    return preferedBreed;
   }
 
 }

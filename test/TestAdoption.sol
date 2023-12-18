@@ -66,6 +66,14 @@ function testGetAdopterAddressByPetIdInArray() public {
   Assert.equal(adopters[expectedPetId], expectedAdopter, "Owner of the expected pet should be this contract");
 }
 
+// Testing retrieval of most adopted breed
+function testGetMostAdoptedBreed() public {
+  bytes32 expectedBreed = "";
+  bytes32 breed = adoption.getMostAdoptedBreed();
+
+  Assert.equal(breed, expectedBreed, "Return of the expected pet breed should match what is returned.");
+}
+
 
 }
 

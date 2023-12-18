@@ -16,6 +16,7 @@ App = {
         petTemplate.find('.pet-age').text(data[i].age);
         petTemplate.find('.pet-location').text(data[i].location);
         petTemplate.find('.btn-adopt').attr('data-id', data[i].id);
+        petTemplate.find('.btn-return').attr('data-id', data[i].id);
 
         petsRow.append(petTemplate.html());
       }
@@ -69,6 +70,7 @@ web3 = new Web3(App.web3Provider);
   bindEvents: function() {
     $(document).on('click', '.btn-adopt', App.handleAdopt);
     $(document).on('click', '.btn-register', App.handleRegister);
+    $(document).on('click', '.btn-return', App.handleReturn);
   },
  
   markAdopted: function(adopters, account) {
@@ -103,18 +105,7 @@ web3 = new Web3(App.web3Provider);
             account = accounts[0];
             console.log(account, currentAdopter)
             if (account === currentAdopter){
-              const returnButton = $('.panel-pet').eq(currentIndex).find('.btn-return').attr('disabled', false);
-    
-              returnButton.on('click', function(event) {
-                App.contracts.Adoption.deployed().then(function(instance) {
-                  return instance.returnPet(currentIndex, {from: account});
-                }).then(function(result) {
-                  location.reload();
-                  return App.markAdopted();
-                }).catch(function(err) {
-                  console.log(err.message);
-                });
-              });
+              $('.panel-pet').eq(currentIndex).find('.btn-return').attr('disabled', false);
             }
             
           });
@@ -124,9 +115,42 @@ web3 = new Web3(App.web3Provider);
       adoptionInstance.getTotalPetsAdopted().then(function(totalPetsAdopted) {
         $('#totalPetsAdopted').text(totalPetsAdopted);
       });
+      adoptionInstance.getMostAdoptedBreed().then(function(mostAdoptedBreed) {
+        console.log(mostAdoptedBreed);
+        var str_breed = web3.toAscii(mostAdoptedBreed).split('\x00')[0];
+        $('#preferedBreed').text(str_breed);
+      });
     }).catch(function(err) {
       console.log(err.message);
     });
+  },
+
+  handleReturn: function(event) {
+    event.preventDefault();
+    
+    App.contracts.Adoption.deployed().then(function(instance) {
+      var petId = parseInt($(event.target).data('id'));
+
+      web3.eth.getAccounts(function(error, accounts) {
+        if (error) {
+          console.log(error);
+        }
+      
+        var account = accounts[0];
+      
+        App.contracts.Adoption.deployed().then(function(instance) {
+          adoptionInstance = instance;
+      
+          // Execute adopt as a transaction by sending account
+          return adoptionInstance.returnPet(petId, {from: account});
+        }).then(function(result) {
+          location.reload();
+          return App.markAdopted();
+        }).catch(function(err) {
+          console.log(err.message);
+        });
+      });
+    })
   },
 
   
@@ -207,6 +231,7 @@ web3 = new Web3(App.web3Provider);
                 petTemplate.find('.pet-age').text(age);
                 petTemplate.find('.pet-location').text(location);
                 petTemplate.find('.btn-adopt').attr('data-id', lastId);
+                petTemplate.find('.btn-return').attr('data-id', lastId);
 
                 petsRow.append(petTemplate.html());
                 
