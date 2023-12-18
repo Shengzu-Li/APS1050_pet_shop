@@ -101,7 +101,7 @@ web3 = new Web3(App.web3Provider);
             if (error) {
               console.log(error);
             }
-          
+            //13. check if current useer is the pet's adopter and enable return button.
             account = accounts[0];
             console.log(account, currentAdopter)
             if (account === currentAdopter){
@@ -115,8 +115,10 @@ web3 = new Web3(App.web3Provider);
       adoptionInstance.getTotalPetsAdopted().then(function(totalPetsAdopted) {
         $('#totalPetsAdopted').text(totalPetsAdopted);
       });
+      //7. keep track of the most adopted breed.
       adoptionInstance.getMostAdoptedBreed().then(function(mostAdoptedBreed) {
         console.log(mostAdoptedBreed);
+        //Covert bytes32 to string.
         var str_breed = web3.toAscii(mostAdoptedBreed).split('\x00')[0];
         $('#preferedBreed').text(str_breed);
       });
@@ -125,6 +127,7 @@ web3 = new Web3(App.web3Provider);
     });
   },
 
+  //handler for return pet events
   handleReturn: function(event) {
     event.preventDefault();
     
@@ -153,8 +156,6 @@ web3 = new Web3(App.web3Provider);
     })
   },
 
-  
-
   handleAdopt: function(event) {
     event.preventDefault();
 
@@ -182,6 +183,7 @@ web3 = new Web3(App.web3Provider);
     });
   },
 
+  //handler for register new pet.
   handleRegister: function(event) {
     event.preventDefault();
     

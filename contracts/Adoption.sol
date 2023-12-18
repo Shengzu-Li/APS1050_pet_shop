@@ -1,10 +1,11 @@
 pragma solidity ^0.5.0;
 
-//Adoption, RegisterNewPet,FindPetOwenr and track how many custumers(address) adopted, and how many pets adopted
+//Adoption and track all adopters
 //1. a way of adding/registering pets (and their photos**), for a fee
 //9. a way of keeping track of which pet belongs to which owner 
 //12. a way of keeping track of how many custumers have been served and how many pets adopted
 //13. a way of returning the pet, for a fee
+//7. a way of keeping track of and publishing the most adopted (or most purchased) breed
 
 contract Adoption {
 address[16] public adopters;
@@ -23,8 +24,9 @@ mapping(uint => Pet) public Pets;
 //owner feature 
 //find address
 mapping(uint => address) public petToOwner;
-//array for storing pet breeds with cooresponding counts.
+//Mapping for storing pet breeds with cooresponding counts.
 mapping(bytes32 => uint) public breedCounts;
+//Dynamic Array for storing unique breeds with adoption order.
 bytes32[] public breeds;
 
 //1. a way of registering pets
@@ -44,7 +46,7 @@ function returnPet(uint pet_id) public returns (uint) {
   return pet_id;
 }
 
-//Constructor
+//Constructor for register defalut pets
 constructor() public {
   register("Frieda", "Scottish Terrier", 3, "Lisco, Alabama", 0);
   register("Gina", "Scottish Terrier", 3, "Tooleville, West Virginia", 1);
@@ -107,6 +109,7 @@ constructor() public {
     return countPetAdopted;
   }
 
+  //7. track the most adopted (or most purchased) breed
   function getMostAdoptedBreed() public view returns (bytes32) {
     uint n = breeds.length;
     bytes32 preferedBreed = breeds[0];
