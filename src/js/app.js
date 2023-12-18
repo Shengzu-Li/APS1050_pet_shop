@@ -83,7 +83,7 @@ web3 = new Web3(App.web3Provider);
         if (adopters[i] !== '0x0000000000000000000000000000000000000000') {
           // show the info for owner (for 9. find pet owner address feature)
           (function (petId) {
-            $('.panel-pet').eq(i).find('button').text('Success').attr('disabled', true);
+            $('.panel-pet').eq(i).find('.btn-adopt').text('Success').attr('disabled', true);
             adoptionInstance.getOwnerOfPet(petId).then(function (owner) {
               ownersArray.push(owner);
               $('.panel-pet').eq(petId).find('#petOwnerInfo').text(owner);
@@ -91,9 +91,33 @@ web3 = new Web3(App.web3Provider);
               //change the totalCustomers
               $('#totalCustomers').text([...new Set(ownersArray)].length);
             });
-
           })(i);
 
+          var currentAdopter = adopters[i];
+          var currentIndex = i;
+          web3.eth.getAccounts(function(error, accounts) {
+            if (error) {
+              console.log(error);
+            }
+          
+            account = accounts[0];
+            console.log(account, currentAdopter)
+            if (account === currentAdopter){
+              const returnButton = $('.panel-pet').eq(currentIndex).find('.btn-return').attr('disabled', false);
+    
+              returnButton.on('click', function(event) {
+                App.contracts.Adoption.deployed().then(function(instance) {
+                  return instance.returnPet(currentIndex, {from: account});
+                }).then(function(result) {
+                  location.reload();
+                  return App.markAdopted();
+                }).catch(function(err) {
+                  console.log(err.message);
+                });
+              });
+            }
+            
+          });
         }
       }
       //12...and how many Pets Adopted

@@ -1,12 +1,14 @@
 pragma solidity ^0.5.0;
 
-//Adoption, FindPetOwenr and track how many custumers(address) adopted, and how many pets adopted
+//Adoption, RegisterNewPet,FindPetOwenr and track how many custumers(address) adopted, and how many pets adopted
+//1. a way of adding/registering pets (and their photos**), for a fee
 //9. a way of keeping track of which pet belongs to which owner 
 //12. a way of keeping track of how many custumers have been served and how many pets adopted
 
 contract Adoption {
 address[16] public adopters;
 
+//Structure for Pet
 struct Pet{
   bytes32 pet_name;
 	bytes32 pet_breed;
@@ -15,11 +17,25 @@ struct Pet{
   uint pet_id;
 }
 
+//Mapping for storing pets with cooresponding pet id.
 mapping(uint => Pet) public Pets;
+//owner feature 
+//find address
+mapping(uint => address) public petToOwner;
 
+//1. a way of registering pets
 // Registering a pet
 function register(bytes32 pet_name, bytes32 pet_breed, uint pet_age, bytes32 pet_location, uint pet_id) public returns (uint) {
   Pets[pet_id] = Pet(pet_name, pet_breed, pet_age, pet_location, pet_id);
+  return pet_id;
+}
+
+//13. a way of returning the pet
+//Returning a pet
+function returnPet(uint pet_id) public returns (uint) {
+  delete Pets[pet_id];
+  adopters[pet_id] = address(0);
+  countPetAdopted--;
   return pet_id;
 }
 

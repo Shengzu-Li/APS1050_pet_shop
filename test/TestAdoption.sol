@@ -23,10 +23,32 @@ function testUserCanAdoptPet() public {
 
 // Testing the register() function
 function testUserCanRegisterPet() public {
-  uint pet_id = 20;
-  uint returnedId = adoption.register("Dabao", "Tugou", 4, "Toronto, ON", pet_id);
+  uint returnedId = adoption.register("Dabao", "Tugou", 4, "Toronto, ON", expectedPetId);
 
   Assert.equal(returnedId, expectedPetId, "Register of the expected pet should match what is returned.");
+}
+
+// Testing the returnPet() function
+function testUserCanReturnPet() public {
+  uint returnedId = adoption.returnPet(expectedPetId);
+
+  Assert.equal(returnedId, expectedPetId, "Return of the expected pet should match what is returned.");
+}
+
+// Testing the getOwnerOfPet() function
+function testUserCanGetOwnerOfPet() public {
+  adoption.adopt(expectedPetId);
+  address adopter = adoption.getOwnerOfPet(expectedPetId);
+  
+  Assert.equal(adopter, expectedAdopter, "Return of the expected pet should match what is returned.");
+}
+
+// Testing the getTotalPetsAdopted() function
+function testUserCanGetTotalPetsAdopted() public {
+  uint expectedCount = 1;
+  uint count = adoption.getTotalPetsAdopted();
+  
+  Assert.equal(count, expectedCount, "Return of the expected pet should match what is returned.");
 }
 
 // Testing retrieval of a single pet's owner
