@@ -2,6 +2,16 @@
 
 This box has all you need to get started with our [Pet Shop tutorial](http://truffleframework.com/tutorials/pet-shop).
 
+## version recommend for installation
+```
+Node.js version: >"16.17.0"
+lite-server version: "2.3.0"
+Solidity version: "0.5.0"
+web3 version: "4.3.0"
+Truffle version: "5.11.5"
+Ganache version: "7.9.1"
+Front-End Framework: JQuery
+```
 ## Installation
 
 1. Install Truffle globally.
